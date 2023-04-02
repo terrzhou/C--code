@@ -1,0 +1,183 @@
+//2.1
+//设计一个图书类Book(至少包含书名和定价信息)，
+//定义该类的必须的成员函数、析构函数、各种重载的构造函数，
+//并演示对象的复制、赋值、输出信息等操作。
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Book {
+private:
+    string title;
+    double price;
+public:
+    Book(){
+        title = "Unknown";
+        price = 0.0;
+    }
+    Book(string t, double p){
+        title = t;
+        price = p;
+    }
+    Book(const Book& other){
+        title = other.title;
+        price = other.price;
+    }
+    Book& operator=(const Book& other){
+        if (this != &other) {
+            title = other.title;
+            price = other.price;
+        }
+        return *this;
+    }
+    ~Book(){
+        cout << "Book " << title << " is destroyed." << endl;
+    }
+    string getTitle() const{
+        return title;
+    }
+    double getPrice() const{
+        return price;
+    }
+    void setTitle(string t){
+        title = t;
+    }
+    void setPrice(double p){
+        price = p;
+    }
+    void printInfo() const{
+        cout << "Title: " << title << ", Price: " << price << endl;
+    }
+};
+
+int main(){
+    Book book1("The Catcher in the Rye", 15.99);
+    book1.printInfo();
+
+    Book book2 = book1;
+    book2.setTitle("The Great Gatsby");
+    book2.setPrice(18.99);
+    book2.printInfo();
+
+    Book book3;
+    book3 = book1;
+    book3.setTitle("To Kill a Mockingbird");
+    book3.setPrice(12.99);
+    book3.printInfo();
+    return 0;
+}
+
+
+//2.2
+//修改第上题中的Book类，再设计一个简单的图书管理系统，
+//可以添加删除图书，并能统计当前图书总数量及总价格。
+//要求：使用静态数据成员和静态成员函数。
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Book {
+private:
+    string title;
+    double price;
+    static int totalNum; // 静态数据成员：当前图书总数量
+    static double totalPrice; // 静态数据成员：当前图书总价格
+public:
+    Book():price(0) { totalNum++; }
+    Book(string t, double p):title(t), price(p){ totalNum++; totalPrice += price; }
+    Book(const Book& other):title(other.title), price(other.price){ totalNum++; totalPrice += price; }
+    ~Book(){ totalNum--; totalPrice -= price; }
+    static void printTotal(){ // 静态成员函数：输出当前图书总数量及总价格
+        cout << "Total number of books: " << totalNum << endl;
+        cout << "Total price of books: " << totalPrice << endl;
+    }
+    void printInfo() const{
+        cout << "Title: " << title << endl;
+        cout << "Price: " << price << endl;
+    }
+    void setTitle(string t){ title = t; }
+    void setPrice(double p){ price = p; }
+};
+
+int Book::totalNum = 0; // 初始化静态数据成员
+double Book::totalPrice = 0;
+
+int main() {
+    Book b1("The Great Gatsby", 9.99);
+    Book b2("To Kill a Mockingbird", 12.99);
+    Book b3 = b1; // 复制对象
+    b3.setTitle("1984");
+    b3.setPrice(7.99);
+    Book b4; // 默认构造函数
+    b4.setTitle("Pride and Prejudice");
+    b4.setPrice(8.99);
+    b1.printInfo();
+    b2.printInfo();
+    b3.printInfo();
+    b4.printInfo();
+    Book::printTotal(); // 静态成员函数
+    return 0;
+}
+
+
+//2.3
+//设计一个平面坐标系下的点类Point(包括横坐标和纵坐标)，
+//定义相关的成员函数(包括设置坐标值、获取坐标值、点到原点的距离等、移动点的位置)。
+//并设计友元函数用于计算两点之间的距离。
+
+#include<iostream>
+#include<cmath>
+using namespace std;
+
+class Point{
+    private:
+        double x;
+        double y;
+    public:
+        Point(double xCoord, double yCoord){
+            x = xCoord;
+            y = yCoord;
+        }
+        double getX() const{
+            return x;
+        }
+        double getY() const{
+            return y;
+        }
+        void setX(double newX){
+            x = newX;
+        }
+        void setY(double newY){
+            y = newY;
+        }
+        void moveTo(double xCoord, double yCoord){
+            x = xCoord;
+            y = yCoord;
+        }
+        double distanceFromOrigin() const{
+            return sqrt(x*x + y*y);
+        }
+        friend double distanceBetweenPoints(const Point& p1, const Point& p2);
+};
+
+double distanceBetweenPoints(const Point& p1, const Point& p2){
+    double dx = p2.x - p1.x;
+    double dy = p2.y - p1.y;
+    return sqrt(dx*dx + dy*dy);
+}
+
+int main(){
+    Point p1(3, 4);
+    Point p2(6, 8);
+
+    cout << "p1 is at (" << p1.getX() << ", " << p1.getY() << ")" << endl;
+    cout << "p2 is at (" << p2.getX() << ", " << p2.getY() << ")" << endl;
+    cout << "Distance between p1 and p2 is " << distanceBetweenPoints(p1, p2) << endl;
+
+    p1.moveTo(0, 0);
+    cout << "p1 is now at (" << p1.getX() << ", " << p1.getY() << ")" << endl;
+    cout << "Distance between p1 and origin is " << p1.distanceFromOrigin() << endl;
+    return 0;
+}
