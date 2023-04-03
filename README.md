@@ -1,4 +1,4 @@
 # C++ code
-This repository is mainly used to share the code of my C++ coursework, which can be run on DevC++.
-If there is any mistake, please correct me.
-Also welcome to exchange and discuss your understanding and perception of the project or C++ here.
+This repository is mainly used to share codes of my C++ coursework, which are compiled in DevC++.
+If there is any mistake or disadvantages, please help me correct it and make it more effective.
+Also, welcome to exchange or share your understandings and perceptions of the projects or even C++ here.
